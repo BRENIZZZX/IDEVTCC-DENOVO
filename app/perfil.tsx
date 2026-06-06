@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, StatusBar, ScrollView } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { resolverFoto } from '@/constants/api'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 
 const ICONE_PADRAO = 'https://ui-avatars.com/api/?background=3b82f6&color=fff&size=256&name='
@@ -19,8 +20,7 @@ export default function PerfilScreen() {
     tipo: string
   }>()
 
-  const fotoValida = foto && foto.startsWith('http')
-  const avatarUrl = fotoValida ? foto : `${ICONE_PADRAO}${encodeURIComponent(nome || 'U')}`
+  const avatarUrl = resolverFoto(foto, nome || 'U')
   const tipoLabel = tipo === 'PROFISSIONAL' ? 'Profissional' : 'Empresa'
 
   return (

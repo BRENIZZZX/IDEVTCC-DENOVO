@@ -1,6 +1,8 @@
 package com.itb.inf2dm.idevplatform.controller;
 
+import com.itb.inf2dm.idevplatform.model.entity.Notificacao;
 import com.itb.inf2dm.idevplatform.model.entity.Usuario;
+import com.itb.inf2dm.idevplatform.model.services.NotificacaoService;
 import com.itb.inf2dm.idevplatform.model.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private NotificacaoService notificacaoService;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarTodosUsuarios() {
@@ -110,6 +115,15 @@ public class UsuarioController {
             String email = loginData.get("email");
             String senha = loginData.get("senha");
             Usuario usuario = usuarioService.login(email, senha);
+
+            Notificacao notificacao = new Notificacao();
+            notificacao.setUsuarioId(usuario.getId());
+            notificacao.setTitulo("Novo acesso à conta");
+            notificacao.setDescricao("Foi detectado um novo login na sua conta.");
+            notificacao.setIcone("🔐");
+            notificacao.setTipo("GERAL");
+            notificacaoService.save(notificacao);
+
             return ResponseEntity.ok(usuario);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(

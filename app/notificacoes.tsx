@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, StatusBar, R
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router'
 import { useColorScheme } from '@/hooks/use-color-scheme'
 import { useState, useEffect, useCallback } from 'react'
-import API_URL from '@/constants/api'
+import API_URL, { resolverFoto } from '@/constants/api'
 
 type Notificacao = {
   id: string
@@ -12,6 +12,7 @@ type Notificacao = {
   dataCriacao: string
   lida: boolean
   tipo: string
+  referenciaId?: number
 }
 
 const ICONES_TIPO: Record<string, string> = {
@@ -53,8 +54,7 @@ export default function NotificacoesScreen() {
     localizacao: string
   }>()
 
-  const fotoValida = foto && foto.startsWith('http')
-  const avatarUrl = fotoValida ? foto : `${ICONE_PADRAO}${encodeURIComponent(nome || 'U')}`
+  const avatarUrl = resolverFoto(foto, nome || 'U')
 
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([])
   const [carregando, setCarregando] = useState(true)
@@ -108,6 +108,13 @@ export default function NotificacoesScreen() {
     }
   }
 
+  const aoTocarNotificacao = (item: Notificacao) => {
+    marcarComoLida(item.id)
+    if (item.tipo === 'MENSAGEM' && item.referenciaId) {
+      router.push({ pathname: '/mensagens', params: { id, nome, foto, tipo, bio, email, localizacao, mensagemId: String(item.referenciaId) } })
+    }
+  }
+
   const marcarTodasComoLidas = async () => {
     if (!id) return
     try {
@@ -122,7 +129,7 @@ export default function NotificacoesScreen() {
 
   const renderItem = ({ item }: { item: Notificacao }) => (
     <TouchableOpacity
-      onPress={() => marcarComoLida(item.id)}
+      onPress={() => aoTocarNotificacao(item)}
       activeOpacity={0.75}
     >
       <View style={[styles.card, { backgroundColor: c.card }, !item.lida && styles.cardNaoLido]}>

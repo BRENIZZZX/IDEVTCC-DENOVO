@@ -35,6 +35,9 @@ public class Notificacao {
     @Column(name = "COD_STATUS")
     private boolean codStatus = true;
 
+    @Column(name = "REFERENCIA_ID")
+    private Long referenciaId;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -61,4 +64,7 @@ public class Notificacao {
 
     public boolean isCodStatus() { return codStatus; }
     public void setCodStatus(boolean codStatus) { this.codStatus = codStatus; }
+
+    public Long getReferenciaId() { return referenciaId; }
+    public void setReferenciaId(Long referenciaId) { this.referenciaId = referenciaId; }
 }

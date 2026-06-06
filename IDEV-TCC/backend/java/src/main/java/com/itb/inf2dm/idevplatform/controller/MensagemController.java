@@ -1,7 +1,9 @@
 package com.itb.inf2dm.idevplatform.controller;
 
 import com.itb.inf2dm.idevplatform.model.entity.Mensagem;
+import com.itb.inf2dm.idevplatform.model.entity.Notificacao;
 import com.itb.inf2dm.idevplatform.model.services.MensagemService;
+import com.itb.inf2dm.idevplatform.model.services.NotificacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +18,26 @@ public class MensagemController {
     
     @Autowired
     private MensagemService mensagemService;
-    
+
+    @Autowired
+    private NotificacaoService notificacaoService;
+
     @PostMapping
     public ResponseEntity<Mensagem> criarMensagem(@RequestBody Mensagem mensagem) {
         Mensagem novaMensagem = mensagemService.save(mensagem);
+
+        Notificacao notificacao = new Notificacao();
+        notificacao.setUsuarioId(novaMensagem.getDestinatarioId());
+        notificacao.setTitulo("Nova mensagem");
+        String descricao = (novaMensagem.getAssunto() != null && !novaMensagem.getAssunto().isBlank())
+            ? "Você recebeu uma mensagem: " + novaMensagem.getAssunto()
+            : "Você recebeu uma nova mensagem.";
+        notificacao.setDescricao(descricao);
+        notificacao.setIcone("💬");
+        notificacao.setTipo("MENSAGEM");
+        notificacao.setReferenciaId(novaMensagem.getId());
+        notificacaoService.save(notificacao);
+
         return ResponseEntity.ok(novaMensagem);
     }
     
