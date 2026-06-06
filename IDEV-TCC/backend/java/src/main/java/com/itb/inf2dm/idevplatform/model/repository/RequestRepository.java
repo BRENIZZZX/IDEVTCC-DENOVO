@@ -1,0 +1,29 @@
+package com.itb.inf2dm.idevplatform.model.repository;
+
+import com.itb.inf2dm.idevplatform.model.entity.Request;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+// FUNCIONALIDADE DE REQUEST VINCULADA A PROJETOS DESATIVADA
+// Esta funcionalidade foi removida do frontend pois a tabela PROJETO não está mais sendo utilizada
+// Mantido comentado para possível reativação futura
+
+/*
+@Repository
+public interface RequestRepository extends JpaRepository<Request, Long> {
+    
+    @Query("SELECT r FROM Request r WHERE r.remetenteId = ?1 AND r.codStatus = true ORDER BY r.dataEnvio DESC")
+    List<Request> findByRemetenteId(Long remetenteId);
+    
+    @Query("SELECT r FROM Request r WHERE r.destinatarioId = ?1 AND r.codStatus = true ORDER BY r.dataEnvio DESC")
+    List<Request> findByDestinatarioId(Long destinatarioId);
+    
+    @Query("SELECT r FROM Request r WHERE (r.remetenteId = ?1 OR r.destinatarioId = ?1) AND r.codStatus = true ORDER BY r.dataEnvio DESC")
+    List<Request> findByUsuarioId(Long usuarioId);
+    
+    @Query("SELECT COUNT(r) FROM Request r WHERE r.codStatus = true")
+    Long countActiveRequests();
+}
+*/
